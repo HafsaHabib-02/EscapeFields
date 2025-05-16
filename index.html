@@ -1,0 +1,35 @@
+{% extends 'base.html' %} 
+{% block content %} 
+ 
+<section class="about"> 
+    <div class="about-text"> 
+        <h2>About EscapeFields</h2> 
+        <p><strong>EscapeFields</strong> – your perfect getaway from the chaos of city life – brings you a slice of heaven nestled in nature’s lap. Designed for those who seek luxury, peace, and a breath of fresh air, our farmhouses offer a unique blend of natural beauty and modern comfort.</p>
+
+        <p>Whether you're relaxing by the serene blue waters of our moonlit swimming pool or enjoying an overnight stay surrounded by lush greenery, EscapeFields is all about creating unforgettable moments. Especially on full moon nights, the atmosphere transforms into something magical — a memory you’ll carry for a lifetime.</p>
+
+        <p>We believe that true hospitality lies in understanding and respecting our guests' needs, which is why we strive to exceed expectations in every way — be it comfort, affordability, service quality, or timely response. Our dedicated and professional staff ensures you enjoy clean, safe, and pollution-free surroundings, along with all the luxurious amenities that make your stay not just relaxing but rejuvenating.</p>
+
+        <p><strong>Breathe. Relax. Escape.</strong><br>Welcome to <strong>EscapeFields</strong> — where nature meets luxury.</p>
+    </div> 
+    <img src="{{ url_for('static', filename='images/pool.jpg') }}" alt="Pool Image" style="width: 45%; height: auto;">
+</section> 
+
+<script> 
+let index = 0; 
+showSlides(); 
+function showSlides() { 
+    let slides = document.getElementsByClassName("slide"); 
+    for (let i = 0; i < slides.length; i++) 
+        slides[i].style.display = "none"; 
+    index++; 
+    if (index > slides.length) index = 1; 
+    slides[index-1].style.display = "block"; 
+    setTimeout(showSlides, 5000); 
+} 
+function plusSlides(n) { 
+    index += n - 1; 
+    showSlides(); 
+} 
+</script> 
+{% endblock %}
