@@ -1,7 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for
-import csv
+import mysql.connector
+from dotenv import load_dotenv
+import os
 
+# Load environment variables
+load_dotenv()
+
+# Flask app
 app = Flask(__name__)
+
+# Database connection
+def get_db_connection():
+    return mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
+    )
 
 @app.route('/')
 def home():
@@ -18,19 +34,26 @@ def gallery():
 @app.route('/book_now', methods=['GET', 'POST'])
 def book_now():
     if request.method == 'POST':
-        data = {
-            'full_name': request.form['full_name'],
-            'phone': request.form['phone'],
-            'email': request.form['email'],
-            'cnic': request.form['cnic'],
-            'people': request.form['people'],
-            'date': request.form['date'],
-            'timing': request.form['timing'],
-            'message': request.form['message']
-        }
-        with open('bookings.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(data.values())
+        data = (
+            request.form['full_name'],
+            request.form['phone'],
+            request.form['email'],
+            request.form['cnic'],
+            int(request.form['people']),
+            request.form['date'],
+            request.form['timing'],
+            request.form['message']
+        )
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        query = """
+        INSERT INTO bookings (full_name, phone, email, cnic, people, date, timing, message)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, data)
+        conn.commit()
+        cursor.close()
+        conn.close()
         return redirect(url_for('thankyou'))
     return render_template('book_now.html')
 
